@@ -1,8 +1,10 @@
 import { create } from 'zustand'
 
 const APP_META = {
-  about:    { title: 'About Me',  icon: '👤', w: 560, h: 420 },
-  projects: { title: 'Projects', icon: '🗂️', w: 700, h: 500 },
+  about:     { title: 'About Me',  icon: '👤', w: 560, h: 440 },
+  education: { title: 'Education', icon: '🎓', w: 580, h: 500 },
+  skills:    { title: 'Skills',    icon: '⚙️', w: 660, h: 480 },
+  projects:  { title: 'Projects',  icon: '🗂️', w: 700, h: 500 },
 }
 
 const useStore = create((set, get) => ({

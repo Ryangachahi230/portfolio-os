@@ -1,12 +1,16 @@
 import { useRef } from 'react'
 import useStore from '../../store/useStore'
 import useDrag from './useDrag'
-import AboutApp from '../apps/About/AboutApp'
-import ProjectsApp from '../apps/Projects/ProjectsApp'
+import AboutApp     from '../apps/About/AboutApp'
+import EducationApp from '../apps/Education/EducationApp'
+import SkillsApp    from '../apps/Skills/SkillsApp'
+import ProjectsApp  from '../apps/Projects/ProjectsApp'
 
 const APPS = {
-  about:    <AboutApp />,
-  projects: <ProjectsApp />,
+  about:     <AboutApp />,
+  education: <EducationApp />,
+  skills:    <SkillsApp />,
+  projects:  <ProjectsApp />,
 }
 
 export default function Window({ win }) {
@@ -29,8 +33,7 @@ export default function Window({ win }) {
         borderRadius: 12,
         boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
         border: '1px solid rgba(255,255,255,0.2)',
-        display: 'flex',
-        flexDirection: 'column',
+        display: 'flex', flexDirection: 'column',
         overflow: 'hidden',
       }}
     >
@@ -38,18 +41,13 @@ export default function Window({ win }) {
       <div
         data-drag-handle
         style={{
-          height: 44,
-          background: '#f0f0f0',
+          height: 44, background: '#f0f0f0',
           borderBottom: '1px solid #ddd',
-          display: 'flex',
-          alignItems: 'center',
-          padding: '0 12px',
-          gap: 8,
-          cursor: 'grab',
-          flexShrink: 0,
+          display: 'flex', alignItems: 'center',
+          padding: '0 12px', gap: 8,
+          cursor: 'grab', flexShrink: 0,
         }}
       >
-        {/* Traffic light buttons */}
         <button onClick={() => closeWindow(win.id)} style={{
           width: 13, height: 13, borderRadius: '50%',
           background: '#ff5f57', border: 'none',
@@ -62,7 +60,6 @@ export default function Window({ win }) {
           width: 13, height: 13, borderRadius: '50%',
           background: '#28c840',
         }} />
-
         <span style={{
           flex: 1, textAlign: 'center',
           fontSize: 13, fontWeight: 600,

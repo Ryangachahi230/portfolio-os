@@ -2,8 +2,10 @@ import DesktopIcon from './DesktopIcon'
 import useStore from '../../store/useStore'
 
 const ICONS = [
-  { appId: 'about',    icon: '👤', label: 'About Me'  },
-  { appId: 'projects', icon: '🗂️', label: 'Projects'  },
+  { appId: 'about',     icon: '👤', label: 'About Me'  },
+  { appId: 'education', icon: '🎓', label: 'Education' },
+  { appId: 'skills',    icon: '⚙️', label: 'Skills'    },
+  { appId: 'projects',  icon: '🗂️', label: 'Projects'  },
 ]
 
 export default function Desktop() {

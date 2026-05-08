@@ -5,12 +5,16 @@ import AboutApp     from '../apps/About/AboutApp'
 import EducationApp from '../apps/Education/EducationApp'
 import SkillsApp    from '../apps/Skills/SkillsApp'
 import ProjectsApp  from '../apps/Projects/ProjectsApp'
+import TerminalApp  from '../apps/Terminal/TerminalApp'
+import ContactApp   from '../apps/Contact/ContactApp'
 
 const APPS = {
   about:     <AboutApp />,
   education: <EducationApp />,
   skills:    <SkillsApp />,
   projects:  <ProjectsApp />,
+  terminal:  <TerminalApp />,
+  contact:   <ContactApp />,
 }
 
 export default function Window({ win }) {

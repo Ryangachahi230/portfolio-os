@@ -1,10 +1,13 @@
 import { create } from 'zustand'
+import eventBus from '../events/eventBus'
 
 const APP_META = {
-  about:     { title: 'About Me',  icon: '👤', w: 560, h: 440 },
-  education: { title: 'Education', icon: '🎓', w: 580, h: 500 },
-  skills:    { title: 'Skills',    icon: '⚙️', w: 660, h: 480 },
-  projects:  { title: 'Projects',  icon: '🗂️', w: 700, h: 500 },
+  about:    { title: 'About Me',   icon: '👤', w: 560, h: 440 },
+  education:{ title: 'Education',  icon: '🎓', w: 580, h: 500 },
+  skills:   { title: 'Skills',     icon: '⚙️', w: 660, h: 480 },
+  projects: { title: 'Projects',   icon: '🗂️', w: 700, h: 500 },
+  terminal: { title: 'Terminal',   icon: '💻', w: 560, h: 380 },
+  contact:  { title: 'Contact',    icon: '📬', w: 500, h: 400 },
 }
 
 const useStore = create((set, get) => ({
@@ -20,9 +23,10 @@ const useStore = create((set, get) => ({
       get().focusWindow(existing.id)
       return
     }
-    const id = `${appId}-${Date.now()}`
-    const z  = get().nextZIndex
+    const id   = `${appId}-${Date.now()}`
+    const z    = get().nextZIndex
     const meta = APP_META[appId]
+
     set(s => ({
       windows: [...s.windows, {
         id, appId,
@@ -37,17 +41,29 @@ const useStore = create((set, get) => ({
       nextZIndex: z + 1,
       activeWindowId: id,
     }))
+
+    // Fire event + log
+    eventBus.emit('APP_OPEN', { appId, id })
+    get().addLog({ type: 'APP_OPEN', detail: appId })
   },
 
-  closeWindow: (id) =>
-    set(s => ({ windows: s.windows.filter(w => w.id !== id) })),
+  closeWindow: (id) => {
+    const win = get().windows.find(w => w.id === id)
+    set(s => ({ windows: s.windows.filter(w => w.id !== id) }))
+    if (win) {
+      eventBus.emit('APP_CLOSE', { appId: win.appId, id })
+      get().addLog({ type: 'APP_CLOSE', detail: win.appId })
+    }
+  },
 
-  minimizeWindow: (id) =>
+  minimizeWindow: (id) => {
     set(s => ({
       windows: s.windows.map(w =>
         w.id === id ? { ...w, minimized: true } : w
       )
-    })),
+    }))
+    get().addLog({ type: 'APP_MINIMIZE', detail: id })
+  },
 
   focusWindow: (id) => {
     const z = get().nextZIndex
@@ -58,6 +74,8 @@ const useStore = create((set, get) => ({
       activeWindowId: id,
       nextZIndex: z + 1,
     }))
+    eventBus.emit('APP_FOCUS', { id })
+    get().addLog({ type: 'APP_FOCUS', detail: id })
   },
 
   moveWindow: (id, x, y) =>
@@ -67,6 +85,19 @@ const useStore = create((set, get) => ({
       )
     })),
 
+  // --- Action log (used by Engineer Mode later) ---
+  logs: [],
+  addLog: (entry) =>
+    set(s => ({
+      logs: [{ ts: Date.now(), ...entry }, ...s.logs].slice(0, 100)
+    })),
+
+  // --- Engineer mode (wired up in Phase 5) ---
+  engineerMode: false,
+  toggleEngineerMode: () =>
+    set(s => ({ engineerMode: !s.engineerMode })),
+
 }))
 
 export default useStore
+export { APP_META }

@@ -10,6 +10,7 @@ const APP_META = {
   terminal: { title: 'Terminal',       icon: '💻', w: 560, h: 380 },
   contact:  { title: 'Contact',        icon: '📬', w: 500, h: 400 },
   monitor:  { title: 'System Monitor', icon: '📊', w: 500, h: 580 },
+  resume:   { title: 'Resume',         icon: '📄', w: 680, h: 580 }, // ← ADD THIS
 }
 
 const useStore = create(

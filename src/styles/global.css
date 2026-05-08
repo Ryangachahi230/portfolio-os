@@ -1,17 +1,62 @@
+/* ── Reset ────────────────────────────────────────────── */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* ── Base ─────────────────────────────────────────────── */
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #1a1a2e;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #000;
   height: 100vh;
   overflow: hidden;
   user-select: none;
 }
 
+/* ── Windows 11 scrollbar ─────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+/* ── Buttons reset ────────────────────────────────────── */
 button {
   cursor: pointer;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ── Links reset ──────────────────────────────────────── */
+a {
+  text-decoration: none;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ── Windows 11 acrylic effect ────────────────────────── */
+.acrylic {
+  background: rgba(243, 243, 243, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ── Focus ring (accessibility) ───────────────────────── */
+:focus-visible {
+  outline: 2px solid #0078D4;
+  outline-offset: 2px;
+}
+
+/* ── Text selection ───────────────────────────────────── */
+::selection {
+  background: #0078D4;
+  color: white;
 }

@@ -6,6 +6,10 @@ export default function useDrag(ref, windowId) {
 
   useEffect(() => {
     const el = ref.current
+
+    // Guard — if element not mounted yet, do nothing
+    if (!el) return
+
     let dragging = false
     let ox = 0, oy = 0
 
@@ -15,11 +19,15 @@ export default function useDrag(ref, windowId) {
       ox = e.clientX - el.offsetLeft
       oy = e.clientY - el.offsetTop
     }
+
     const onMove = (e) => {
       if (!dragging) return
       moveWindow(windowId, e.clientX - ox, e.clientY - oy)
     }
-    const onUp = () => { dragging = false }
+
+    const onUp = () => {
+      dragging = false
+    }
 
     el.addEventListener('mousedown', onDown)
     window.addEventListener('mousemove', onMove)

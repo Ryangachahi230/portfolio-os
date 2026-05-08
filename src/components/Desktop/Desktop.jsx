@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import DesktopIcon from './DesktopIcon'
+import EngineerToggle from '../EngineerMode/EngineerToggle'
 import useStore from '../../store/useStore'
 
 const ICONS = [
@@ -18,7 +19,7 @@ export default function Desktop() {
 
   return (
     <div style={{
-      width: '100vw', height: '100vh',
+      width: '100%', height: '100vh',
       background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
       display: 'flex', flexDirection: 'column',
       justifyContent: 'space-between',
@@ -49,21 +50,24 @@ export default function Desktop() {
         display: 'flex', alignItems: 'center',
         padding: '0 16px', gap: 8,
       }}>
+
+        {/* OS label */}
         <span style={{
           color: 'white', fontSize: 13,
-          marginRight: 12, fontWeight: 500,
+          fontWeight: 500, marginRight: 8,
         }}>
           🖥️ Portfolio OS
         </span>
 
+        {/* Divider */}
         {minimized.length > 0 && (
           <div style={{
             width: 1, height: 24,
             background: 'rgba(255,255,255,0.2)',
-            marginRight: 4,
           }} />
         )}
 
+        {/* Minimized app restore buttons */}
         {minimized.map(win => (
           <button
             key={win.id}
@@ -82,7 +86,11 @@ export default function Desktop() {
           </button>
         ))}
 
-        <Clock />
+        {/* Right side — Engineer toggle + clock */}
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 12 }}>
+          <EngineerToggle />
+          <Clock />
+        </div>
       </div>
     </div>
   )
@@ -97,7 +105,7 @@ function Clock() {
   return (
     <span style={{
       color: 'rgba(255,255,255,0.7)',
-      fontSize: 12, marginLeft: 'auto',
+      fontSize: 12, fontFamily: 'monospace',
     }}>
       {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
     </span>

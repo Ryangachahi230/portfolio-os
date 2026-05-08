@@ -1,6 +1,6 @@
+import { useState, useEffect } from 'react'
 import DesktopIcon from './DesktopIcon'
 import useStore from '../../store/useStore'
-import { useState, useEffect } from 'react'
 
 const ICONS = [
   { appId: 'about',     icon: '👤', label: 'About Me'  },
@@ -9,6 +9,7 @@ const ICONS = [
   { appId: 'projects',  icon: '🗂️', label: 'Projects'  },
   { appId: 'terminal',  icon: '💻', label: 'Terminal'  },
   { appId: 'contact',   icon: '📬', label: 'Contact'   },
+  { appId: 'monitor',   icon: '📊', label: 'Monitor'   },
 ]
 
 export default function Desktop() {
@@ -23,7 +24,7 @@ export default function Desktop() {
       justifyContent: 'space-between',
     }}>
 
-      {/* Icons grid */}
+      {/* Icons */}
       <div style={{
         display: 'flex', flexWrap: 'wrap',
         gap: 8, padding: 24,
@@ -48,7 +49,6 @@ export default function Desktop() {
         display: 'flex', alignItems: 'center',
         padding: '0 16px', gap: 8,
       }}>
-        {/* OS label */}
         <span style={{
           color: 'white', fontSize: 13,
           marginRight: 12, fontWeight: 500,
@@ -56,7 +56,6 @@ export default function Desktop() {
           🖥️ Portfolio OS
         </span>
 
-        {/* Divider */}
         {minimized.length > 0 && (
           <div style={{
             width: 1, height: 24,
@@ -65,7 +64,6 @@ export default function Desktop() {
           }} />
         )}
 
-        {/* Minimized app buttons */}
         {minimized.map(win => (
           <button
             key={win.id}
@@ -76,7 +74,6 @@ export default function Desktop() {
               border: '1px solid rgba(255,255,255,0.25)',
               borderRadius: 6, color: 'white',
               fontSize: 12, cursor: 'pointer',
-              transition: 'background 0.2s',
             }}
             onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.25)'}
             onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
@@ -85,7 +82,6 @@ export default function Desktop() {
           </button>
         ))}
 
-        {/* Clock — right side */}
         <Clock />
       </div>
     </div>
@@ -94,12 +90,10 @@ export default function Desktop() {
 
 function Clock() {
   const [time, setTime] = useState(new Date())
-
   useEffect(() => {
     const t = setInterval(() => setTime(new Date()), 1000)
     return () => clearInterval(t)
   }, [])
-
   return (
     <span style={{
       color: 'rgba(255,255,255,0.7)',

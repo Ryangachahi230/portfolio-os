@@ -7,6 +7,7 @@ import SkillsApp    from '../apps/Skills/SkillsApp'
 import ProjectsApp  from '../apps/Projects/ProjectsApp'
 import TerminalApp  from '../apps/Terminal/TerminalApp'
 import ContactApp   from '../apps/Contact/ContactApp'
+import MonitorApp   from '../apps/Monitor/MonitorApp'
 
 const APPS = {
   about:     <AboutApp />,
@@ -15,6 +16,7 @@ const APPS = {
   projects:  <ProjectsApp />,
   terminal:  <TerminalApp />,
   contact:   <ContactApp />,
+  monitor:   <MonitorApp />,
 }
 
 export default function Window({ win }) {

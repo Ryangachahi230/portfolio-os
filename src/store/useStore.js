@@ -13,15 +13,34 @@ const APP_META = {
   resume:    { title: 'Resume',         icon: '📄', w: 680, h: 580 },
   clientwork:{ title: 'Client Work',    icon: '💼', w: 780, h: 560 },
   game:      { title: 'Snake Game',     icon: '🎮', w: 480, h: 620 },
+  filemanager: { title: 'File Explorer', icon: '📁', w: 720, h: 520 },
 }
+
+// ── Default icon positions (grid layout top-left) ────────
+const DEFAULT_ICON_POSITIONS = {
+  about:      { x: 20,  y: 20  },
+  education:  { x: 20,  y: 110 },
+  skills:     { x: 20,  y: 200 },
+  projects:   { x: 20,  y: 290 },
+  resume:     { x: 20,  y: 380 },
+  clientwork: { x: 20,  y: 470 },
+  terminal:   { x: 110, y: 20  },
+  contact:    { x: 110, y: 110 },
+  monitor:    { x: 110, y: 200 },
+  game:       { x: 110, y: 290 },
+  filemanager: { x: 110, y: 380 },
+}
+
+// ── All apps pinned to desktop by default ────────────────
+const DEFAULT_PINNED = Object.keys(DEFAULT_ICON_POSITIONS)
 
 const useStore = create(
   persist(
     (set, get) => ({
 
-      // ── Windows ──────────────────────────────────────────────
-      windows: [],
-      nextZIndex: 10,
+      // ── Windows ──────────────────────────────────────
+      windows:       [],
+      nextZIndex:    10,
       activeWindowId: null,
 
       openWindow: (appId) => {
@@ -33,6 +52,7 @@ const useStore = create(
         const id   = `${appId}-${Date.now()}`
         const z    = get().nextZIndex
         const meta = APP_META[appId]
+        if (!meta) return
 
         set(s => ({
           windows: [...s.windows, {
@@ -45,7 +65,7 @@ const useStore = create(
             minimized: false,
             zIndex: z,
           }],
-          nextZIndex: z + 1,
+          nextZIndex:    z + 1,
           activeWindowId: id,
         }))
 
@@ -79,7 +99,7 @@ const useStore = create(
             w.id === id ? { ...w, zIndex: z, minimized: false } : w
           ),
           activeWindowId: id,
-          nextZIndex: z + 1,
+          nextZIndex:     z + 1,
         }))
         eventBus.emit('APP_FOCUS', { id })
         get().addLog({ type: 'APP_FOCUS', detail: id })
@@ -92,14 +112,59 @@ const useStore = create(
           )
         })),
 
-      // ── Logs ─────────────────────────────────────────────────
+      // ── Desktop icon positions ────────────────────────
+      iconPositions: DEFAULT_ICON_POSITIONS,
+
+      setIconPosition: (appId, x, y) =>
+        set(s => ({
+          iconPositions: {
+            ...s.iconPositions,
+            [appId]: { x, y },
+          }
+        })),
+
+      resetIconPositions: () =>
+        set({ iconPositions: DEFAULT_ICON_POSITIONS }),
+
+      // ── Pinned icons on desktop ───────────────────────
+      pinnedIcons: DEFAULT_PINNED,
+
+      pinIcon: (appId) =>
+        set(s => ({
+          pinnedIcons: s.pinnedIcons.includes(appId)
+            ? s.pinnedIcons
+            : [...s.pinnedIcons, appId],
+        })),
+
+      unpinIcon: (appId) =>
+        set(s => ({
+          pinnedIcons: s.pinnedIcons.filter(id => id !== appId),
+        })),
+
+      // ── Pinned apps in taskbar ────────────────────────
+      // (separate from desktop icons)
+      pinnedTaskbar: ['about', 'projects', 'terminal'],
+
+      pinToTaskbar: (appId) =>
+        set(s => ({
+          pinnedTaskbar: s.pinnedTaskbar.includes(appId)
+            ? s.pinnedTaskbar
+            : [...s.pinnedTaskbar, appId],
+        })),
+
+      unpinFromTaskbar: (appId) =>
+        set(s => ({
+          pinnedTaskbar: s.pinnedTaskbar.filter(id => id !== appId),
+        })),
+
+      // ── Logs ─────────────────────────────────────────
       logs: [],
       addLog: (entry) =>
         set(s => ({
           logs: [{ ts: Date.now(), ...entry }, ...s.logs].slice(0, 100)
         })),
 
-      // ── Engineer mode ─────────────────────────────────────────
+      // ── Engineer mode ─────────────────────────────────
       engineerMode: false,
       toggleEngineerMode: () =>
         set(s => ({ engineerMode: !s.engineerMode })),
@@ -107,12 +172,14 @@ const useStore = create(
     }),
 
     {
-      name: 'portfolio-os-state',      // localStorage key
+      name: 'portfolio-os-state',
       partialize: (s) => ({
-        // Only persist these — NOT logs or engineerMode
-        windows:      s.windows,
-        nextZIndex:   s.nextZIndex,
-        engineerMode: s.engineerMode,
+        windows:       s.windows,
+        nextZIndex:    s.nextZIndex,
+        engineerMode:  s.engineerMode,
+        iconPositions: s.iconPositions,
+        pinnedIcons:   s.pinnedIcons,
+        pinnedTaskbar: s.pinnedTaskbar,
       }),
     }
   )

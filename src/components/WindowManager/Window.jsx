@@ -11,7 +11,7 @@ import MonitorApp    from '../apps/Monitor/MonitorApp'
 import ResumeApp     from '../apps/Resume/ResumeApp'
 import ClientWorkApp from '../apps/ClientWork/ClientWorkApp'
 import GameApp       from '../apps/Game/GameApp'
-
+import FileManagerApp from '../apps/FileManager/FileManagerApp'
 const APPS = {
   about:      <AboutApp />,
   education:  <EducationApp />,
@@ -23,6 +23,7 @@ const APPS = {
   resume:     <ResumeApp />,
   clientwork: <ClientWorkApp />,
   game:       <GameApp />,
+  filemanager:<FileManagerApp />,
 }
 
 const APP_ICONS = {
@@ -36,6 +37,7 @@ const APP_ICONS = {
   resume:     { icon: '📄', bg: 'linear-gradient(145deg, #d83b01, #a42900)' },
   clientwork: { icon: '💼', bg: 'linear-gradient(145deg, #8764B8, #5c3d8f)' },
   game:       { icon: '🎮', bg: 'linear-gradient(145deg, #038387, #025a5e)' },
+  filemanager: { icon: '📁', bg: 'linear-gradient(145deg, #107C10, #0a5a0a)' },
 }
 
 function MinimizeIcon() {

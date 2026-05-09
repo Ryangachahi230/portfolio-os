@@ -1,18 +1,18 @@
 import { useState, useEffect, useRef } from 'react'
 import useStore from '../../store/useStore'
 
-
 const ALL_APPS = [
-  { appId: 'about',      icon: '👤', label: 'About Me',     bg: 'linear-gradient(145deg, #0078D4, #005a9e)' },
-  { appId: 'education',  icon: '🎓', label: 'Education',    bg: 'linear-gradient(145deg, #107C10, #0a5a0a)' },
-  { appId: 'skills',     icon: '⚙️', label: 'Skills',       bg: 'linear-gradient(145deg, #8764B8, #5c3d8f)' },
-  { appId: 'projects',   icon: '🗂️', label: 'Projects',     bg: 'linear-gradient(145deg, #C239B3, #8a1f7e)' },
-  { appId: 'resume',     icon: '📄', label: 'Resume',       bg: 'linear-gradient(145deg, #d83b01, #a42900)' },
-  { appId: 'clientwork', icon: '💼', label: 'Client Work',  bg: 'linear-gradient(145deg, #8764B8, #5c3d8f)' },
-  { appId: 'terminal',   icon: '💻', label: 'Terminal',     bg: 'linear-gradient(145deg, #2d2d2d, #1a1a1a)' },
-  { appId: 'contact',    icon: '📬', label: 'Contact',      bg: 'linear-gradient(145deg, #0078D4, #004e8c)' },
-  { appId: 'monitor',    icon: '📊', label: 'Monitor',      bg: 'linear-gradient(145deg, #005FB8, #003a72)' },
-  { appId: 'game',       icon: '🎮', label: 'Snake Game',   bg: 'linear-gradient(145deg, #038387, #025a5e)' },
+  { appId: 'about',       icon: '👤', label: 'About Me',     bg: 'linear-gradient(145deg, #0078D4, #005a9e)' },
+  { appId: 'education',   icon: '🎓', label: 'Education',    bg: 'linear-gradient(145deg, #107C10, #0a5a0a)' },
+  { appId: 'skills',      icon: '⚙️', label: 'Skills',       bg: 'linear-gradient(145deg, #8764B8, #5c3d8f)' },
+  { appId: 'projects',    icon: '🗂️', label: 'Projects',     bg: 'linear-gradient(145deg, #C239B3, #8a1f7e)' },
+  { appId: 'resume',      icon: '📄', label: 'Resume',       bg: 'linear-gradient(145deg, #d83b01, #a42900)' },
+  { appId: 'clientwork',  icon: '💼', label: 'Client Work',  bg: 'linear-gradient(145deg, #8764B8, #5c3d8f)' },
+  { appId: 'terminal',    icon: '💻', label: 'Terminal',     bg: 'linear-gradient(145deg, #2d2d2d, #1a1a1a)' },
+  { appId: 'contact',     icon: '📬', label: 'Contact',      bg: 'linear-gradient(145deg, #0078D4, #004e8c)' },
+  { appId: 'monitor',     icon: '📊', label: 'Monitor',      bg: 'linear-gradient(145deg, #005FB8, #003a72)' },
+  { appId: 'game',        icon: '🎮', label: 'Snake Game',   bg: 'linear-gradient(145deg, #038387, #025a5e)' },
+  { appId: 'filemanager', icon: '📁', label: 'File Explorer',bg: 'linear-gradient(145deg, #FFB900, #e6a800)' },
 ]
 
 // ── Pinned app icon ──────────────────────────────────────
@@ -147,7 +147,6 @@ export default function StartMenu({ onClose }) {
         onClose()
       }
     }
-    // Small delay so the Windows button click doesn't immediately close it
     const t = setTimeout(() =>
       document.addEventListener('mousedown', handler), 100
     )
@@ -214,12 +213,12 @@ export default function StartMenu({ onClose }) {
         }
       `}</style>
 
-      {/* ── Search ────────────────────────────────────── */}
+      {/* ── Search ──────────────────────────────────── */}
       <SearchBar value={search} onChange={setSearch} />
 
       <div style={{ display: 'flex', flex: 1 }}>
 
-        {/* ── Left sidebar ──────────────────────────────── */}
+        {/* ── Left sidebar ────────────────────────────── */}
         <div style={{
           width: 220,
           borderRight: '1px solid rgba(255,255,255,0.08)',
@@ -227,6 +226,7 @@ export default function StartMenu({ onClose }) {
           flexDirection: 'column',
           padding: '8px 0',
         }}>
+
           {/* User profile */}
           <div style={{
             display: 'flex',
@@ -237,24 +237,20 @@ export default function StartMenu({ onClose }) {
             marginBottom: 8,
           }}>
             <div style={{
-              width: 42,
-              height: 42,
+              width: 42, height: 42,
               borderRadius: '50%',
               background: 'linear-gradient(135deg, #0078D4, #005a9e)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 22,
-              flexShrink: 0,
+              fontSize: 22, flexShrink: 0,
               boxShadow: '0 2px 8px rgba(0,120,212,0.4)',
             }}>
               👤
             </div>
             <div>
               <div style={{
-                fontSize: 13,
-                fontWeight: 600,
-                color: 'white',
+                fontSize: 13, fontWeight: 600, color: 'white',
               }}>
                 Ryan Gachahi
               </div>
@@ -268,7 +264,7 @@ export default function StartMenu({ onClose }) {
             </div>
           </div>
 
-          {/* Quick links */}
+          {/* ── Quick links ─────────────────────────── */}
           <SideItem icon="👤" label="About Me"
             onClick={() => handleOpen('about')} />
           <SideItem icon="🗂️" label="Projects"
@@ -282,10 +278,14 @@ export default function StartMenu({ onClose }) {
           <SideItem icon="📬" label="Contact"
             onClick={() => handleOpen('contact')} />
 
+          {/* ── NEW: File Explorer link ──────────────── */}
+          <SideItem icon="📁" label="File Explorer"
+            onClick={() => handleOpen('filemanager')} />
+
           {/* Spacer */}
           <div style={{ flex: 1 }} />
 
-          {/* Bottom actions */}
+          {/* ── Bottom actions ───────────────────────── */}
           <div style={{
             borderTop: '1px solid rgba(255,255,255,0.08)',
             paddingTop: 8,
@@ -302,7 +302,7 @@ export default function StartMenu({ onClose }) {
           </div>
         </div>
 
-        {/* ── Right — pinned apps grid ───────────────────── */}
+        {/* ── Right — pinned apps grid ─────────────────── */}
         <div style={{
           flex: 1,
           padding: '12px 8px',

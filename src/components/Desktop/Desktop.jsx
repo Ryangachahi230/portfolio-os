@@ -15,6 +15,7 @@ const ICONS = [
   { appId: 'contact',    icon: '📬', label: 'Contact',     bg: 'linear-gradient(145deg, #0078D4, #004e8c)' },
   { appId: 'monitor',    icon: '📊', label: 'Monitor',     bg: 'linear-gradient(145deg, #005FB8, #003a72)' },
   { appId: 'game',       icon: '🎮', label: 'Snake Game',  bg: 'linear-gradient(145deg, #038387, #025a5e)' },
+  { appId: 'filemanager', icon: '📁', label: 'Files', bg: 'linear-gradient(145deg, #FFB900, #e6a800)' },
 ]
 
 function WindowsLogo() {
@@ -29,7 +30,11 @@ function WindowsLogo() {
 }
 
 export default function Desktop() {
-  const { openWindow, windows, focusWindow } = useStore()
+  const {
+    openWindow, windows, focusWindow,
+    pinnedIcons, resetIconPositions,
+  } = useStore()
+
   const minimized  = windows.filter(w => w.minimized)
   const [showStart, setShowStart] = useState(false)
 
@@ -47,8 +52,7 @@ export default function Desktop() {
       {/* ── Vista Wallpaper ─────────────────────────── */}
       <div style={{
         position: 'absolute',
-        inset: 0,
-        zIndex: 0,
+        inset: 0, zIndex: 0,
         overflow: 'hidden',
       }}>
         {/* Sky */}
@@ -59,7 +63,6 @@ export default function Desktop() {
             #2d6abf 50%, #5b9bd4 65%, #87ceeb 78%,
             #b8e0f0 88%, #d4eef8 100%)`,
         }} />
-
         {/* Sun glow */}
         <div style={{
           position: 'absolute',
@@ -68,14 +71,12 @@ export default function Desktop() {
           width: '60%', height: '50%',
           background: 'radial-gradient(ellipse at 50% 20%, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.08) 35%, transparent 65%)',
         }} />
-
         {/* Horizon haze */}
         <div style={{
           position: 'absolute',
           bottom: '28%', left: 0, right: 0, height: '22%',
           background: 'radial-gradient(ellipse at 50% 100%, rgba(200,230,255,0.5) 0%, rgba(150,200,240,0.2) 50%, transparent 75%)',
         }} />
-
         {/* Green orb bloom */}
         <div style={{
           position: 'absolute',
@@ -84,7 +85,6 @@ export default function Desktop() {
           width: '55%', height: '45%',
           background: 'radial-gradient(ellipse at 50% 80%, rgba(80,180,80,0.55) 0%, rgba(40,140,40,0.25) 40%, transparent 70%)',
         }} />
-
         {/* Orb highlight */}
         <div style={{
           position: 'absolute',
@@ -93,7 +93,6 @@ export default function Desktop() {
           width: '22%', height: '22%',
           background: 'radial-gradient(ellipse at 50% 60%, rgba(200,255,200,0.7) 0%, rgba(120,220,120,0.3) 50%, transparent 75%)',
         }} />
-
         {/* Grass base */}
         <div style={{
           position: 'absolute',
@@ -103,7 +102,6 @@ export default function Desktop() {
             #1f5e1f 80%, #164416 100%)`,
           borderRadius: '50% 50% 0 0 / 8% 8% 0 0',
         }} />
-
         {/* Grass highlight */}
         <div style={{
           position: 'absolute',
@@ -112,7 +110,6 @@ export default function Desktop() {
           width: '70%', height: '10%',
           background: 'radial-gradient(ellipse at 50% 0%, rgba(120,220,80,0.5) 0%, transparent 70%)',
         }} />
-
         {/* Left grass roll */}
         <div style={{
           position: 'absolute',
@@ -120,7 +117,6 @@ export default function Desktop() {
           width: '30%', height: '22%',
           background: 'radial-gradient(ellipse at 100% 0%, #2d7d2d 0%, transparent 70%)',
         }} />
-
         {/* Right grass roll */}
         <div style={{
           position: 'absolute',
@@ -128,7 +124,6 @@ export default function Desktop() {
           width: '30%', height: '22%',
           background: 'radial-gradient(ellipse at 0% 0%, #2d7d2d 0%, transparent 70%)',
         }} />
-
         {/* Cloud 1 */}
         <div style={{
           position: 'absolute',
@@ -137,7 +132,6 @@ export default function Desktop() {
           background: 'radial-gradient(ellipse at 50% 60%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.2) 50%, transparent 75%)',
           filter: 'blur(4px)',
         }} />
-
         {/* Cloud 2 */}
         <div style={{
           position: 'absolute',
@@ -146,7 +140,6 @@ export default function Desktop() {
           background: 'radial-gradient(ellipse at 50% 60%, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 50%, transparent 75%)',
           filter: 'blur(5px)',
         }} />
-
         {/* Cloud 3 */}
         <div style={{
           position: 'absolute',
@@ -157,26 +150,31 @@ export default function Desktop() {
         }} />
       </div>
 
-      {/* ── Desktop icons ───────────────────────────── */}
-      <div style={{
-        position: 'relative',
-        zIndex: 1,
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 4,
-        padding: 20,
-        alignContent: 'flex-start',
-        flex: 1,
-      }}>
-        {ICONS.map(({ appId, icon, label, bg }) => (
-          <DesktopIcon
-            key={appId}
-            icon={icon}
-            label={label}
-            bg={bg}
-            onClick={() => openWindow(appId)}
-          />
-        ))}
+      {/* ── Desktop icon area ────────────────────────── */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 1,
+          flex: 1,
+        }}
+        onContextMenu={(e) => {
+          // Right-click on empty desktop
+          e.preventDefault()
+        }}
+      >
+        {pinnedIcons.map((appId) => {
+          const iconData = ICONS.find(i => i.appId === appId)
+          if (!iconData) return null
+          return (
+            <DesktopIcon
+              key={appId}
+              appId={appId}
+              icon={iconData.icon}
+              label={iconData.label}
+              bg={iconData.bg}
+            />
+          )
+        })}
       </div>
 
       {/* ── Start Menu ──────────────────────────────── */}

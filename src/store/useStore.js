@@ -3,14 +3,16 @@ import { persist } from 'zustand/middleware'
 import eventBus from '../events/eventBus'
 
 const APP_META = {
-  about:    { title: 'About Me',       icon: '👤', w: 560, h: 440 },
-  education:{ title: 'Education',      icon: '🎓', w: 580, h: 500 },
-  skills:   { title: 'Skills',         icon: '⚙️', w: 660, h: 480 },
-  projects: { title: 'Projects',       icon: '🗂️', w: 700, h: 500 },
-  terminal: { title: 'Terminal',       icon: '💻', w: 560, h: 380 },
-  contact:  { title: 'Contact',        icon: '📬', w: 500, h: 400 },
-  monitor:  { title: 'System Monitor', icon: '📊', w: 500, h: 580 },
-  resume:   { title: 'Resume',         icon: '📄', w: 680, h: 580 }, // ← ADD THIS
+  about:     { title: 'About Me',       icon: '👤', w: 560, h: 440 },
+  education: { title: 'Education',      icon: '🎓', w: 580, h: 500 },
+  skills:    { title: 'Skills',         icon: '⚙️', w: 660, h: 480 },
+  projects:  { title: 'Projects',       icon: '🗂️', w: 700, h: 500 },
+  terminal:  { title: 'Terminal',       icon: '💻', w: 560, h: 380 },
+  contact:   { title: 'Contact',        icon: '📬', w: 500, h: 400 },
+  monitor:   { title: 'System Monitor', icon: '📊', w: 500, h: 580 },
+  resume:    { title: 'Resume',         icon: '📄', w: 680, h: 580 },
+  clientwork:{ title: 'Client Work',    icon: '💼', w: 780, h: 560 },
+  game:      { title: 'Snake Game',     icon: '🎮', w: 480, h: 620 },
 }
 
 const useStore = create(

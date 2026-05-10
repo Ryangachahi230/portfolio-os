@@ -5,17 +5,17 @@ import StartMenu from '../StartMenu/StartMenu'
 import useStore from '../../store/useStore'
 
 const ICONS = [
-  { appId: 'about',      icon: '👤', label: 'About Me',    bg: 'linear-gradient(145deg, #0078D4, #005a9e)' },
-  { appId: 'education',  icon: '🎓', label: 'Education',   bg: 'linear-gradient(145deg, #107C10, #0a5a0a)' },
-  { appId: 'skills',     icon: '⚙️', label: 'Skills',      bg: 'linear-gradient(145deg, #8764B8, #5c3d8f)' },
-  { appId: 'projects',   icon: '🗂️', label: 'Projects',    bg: 'linear-gradient(145deg, #C239B3, #8a1f7e)' },
-  { appId: 'resume',     icon: '📄', label: 'Resume',      bg: 'linear-gradient(145deg, #d83b01, #a42900)' },
-  { appId: 'clientwork', icon: '💼', label: 'Client Work', bg: 'linear-gradient(145deg, #8764B8, #5c3d8f)' },
-  { appId: 'terminal',   icon: '💻', label: 'Terminal',    bg: 'linear-gradient(145deg, #2d2d2d, #1a1a1a)' },
-  { appId: 'contact',    icon: '📬', label: 'Contact',     bg: 'linear-gradient(145deg, #0078D4, #004e8c)' },
-  { appId: 'monitor',    icon: '📊', label: 'Monitor',     bg: 'linear-gradient(145deg, #005FB8, #003a72)' },
-  { appId: 'game',       icon: '🎮', label: 'Snake Game',  bg: 'linear-gradient(145deg, #038387, #025a5e)' },
-  { appId: 'filemanager', icon: '📁', label: 'Files', bg: 'linear-gradient(145deg, #FFB900, #e6a800)' },
+  { appId: 'about',       icon: '👤', label: 'About Me',     bg: 'linear-gradient(145deg, #0078D4, #005a9e)' },
+  { appId: 'education',   icon: '🎓', label: 'Education',    bg: 'linear-gradient(145deg, #107C10, #0a5a0a)' },
+  { appId: 'skills',      icon: '⚙️', label: 'Skills',       bg: 'linear-gradient(145deg, #8764B8, #5c3d8f)' },
+  { appId: 'projects',    icon: '🗂️', label: 'Projects',     bg: 'linear-gradient(145deg, #C239B3, #8a1f7e)' },
+  { appId: 'resume',      icon: '📄', label: 'Resume',       bg: 'linear-gradient(145deg, #d83b01, #a42900)' },
+  { appId: 'clientwork',  icon: '💼', label: 'Client Work',  bg: 'linear-gradient(145deg, #8764B8, #5c3d8f)' },
+  { appId: 'terminal',    icon: '💻', label: 'Terminal',     bg: 'linear-gradient(145deg, #2d2d2d, #1a1a1a)' },
+  { appId: 'contact',     icon: '📬', label: 'Contact',      bg: 'linear-gradient(145deg, #0078D4, #004e8c)' },
+  { appId: 'monitor',     icon: '📊', label: 'Monitor',      bg: 'linear-gradient(145deg, #005FB8, #003a72)' },
+  { appId: 'game',        icon: '🎮', label: 'Snake Game',   bg: 'linear-gradient(145deg, #038387, #025a5e)' },
+  { appId: 'filemanager', icon: '📁', label: 'Files',        bg: 'linear-gradient(145deg, #FFB900, #e6a800)' },
 ]
 
 function WindowsLogo() {
@@ -35,8 +35,16 @@ export default function Desktop() {
     pinnedIcons, resetIconPositions,
   } = useStore()
 
-  const minimized  = windows.filter(w => w.minimized)
+  const minimized   = windows.filter(w => w.minimized)
   const [showStart, setShowStart] = useState(false)
+  const [isMobile,  setIsMobile]  = useState(window.innerWidth < 768)
+
+  // Listen for resize
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handler)
+    return () => window.removeEventListener('resize', handler)
+  }, [])
 
   return (
     <div style={{
@@ -55,7 +63,6 @@ export default function Desktop() {
         inset: 0, zIndex: 0,
         overflow: 'hidden',
       }}>
-        {/* Sky */}
         <div style={{
           position: 'absolute', inset: 0,
           background: `linear-gradient(180deg,
@@ -63,7 +70,6 @@ export default function Desktop() {
             #2d6abf 50%, #5b9bd4 65%, #87ceeb 78%,
             #b8e0f0 88%, #d4eef8 100%)`,
         }} />
-        {/* Sun glow */}
         <div style={{
           position: 'absolute',
           top: '18%', left: '50%',
@@ -71,13 +77,11 @@ export default function Desktop() {
           width: '60%', height: '50%',
           background: 'radial-gradient(ellipse at 50% 20%, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.08) 35%, transparent 65%)',
         }} />
-        {/* Horizon haze */}
         <div style={{
           position: 'absolute',
           bottom: '28%', left: 0, right: 0, height: '22%',
           background: 'radial-gradient(ellipse at 50% 100%, rgba(200,230,255,0.5) 0%, rgba(150,200,240,0.2) 50%, transparent 75%)',
         }} />
-        {/* Green orb bloom */}
         <div style={{
           position: 'absolute',
           bottom: '20%', left: '50%',
@@ -85,7 +89,6 @@ export default function Desktop() {
           width: '55%', height: '45%',
           background: 'radial-gradient(ellipse at 50% 80%, rgba(80,180,80,0.55) 0%, rgba(40,140,40,0.25) 40%, transparent 70%)',
         }} />
-        {/* Orb highlight */}
         <div style={{
           position: 'absolute',
           bottom: '26%', left: '50%',
@@ -93,7 +96,6 @@ export default function Desktop() {
           width: '22%', height: '22%',
           background: 'radial-gradient(ellipse at 50% 60%, rgba(200,255,200,0.7) 0%, rgba(120,220,120,0.3) 50%, transparent 75%)',
         }} />
-        {/* Grass base */}
         <div style={{
           position: 'absolute',
           bottom: 0, left: 0, right: 0, height: '32%',
@@ -102,7 +104,6 @@ export default function Desktop() {
             #1f5e1f 80%, #164416 100%)`,
           borderRadius: '50% 50% 0 0 / 8% 8% 0 0',
         }} />
-        {/* Grass highlight */}
         <div style={{
           position: 'absolute',
           bottom: '28%', left: '50%',
@@ -110,41 +111,31 @@ export default function Desktop() {
           width: '70%', height: '10%',
           background: 'radial-gradient(ellipse at 50% 0%, rgba(120,220,80,0.5) 0%, transparent 70%)',
         }} />
-        {/* Left grass roll */}
         <div style={{
           position: 'absolute',
-          bottom: 0, left: 0,
-          width: '30%', height: '22%',
+          bottom: 0, left: 0, width: '30%', height: '22%',
           background: 'radial-gradient(ellipse at 100% 0%, #2d7d2d 0%, transparent 70%)',
         }} />
-        {/* Right grass roll */}
         <div style={{
           position: 'absolute',
-          bottom: 0, right: 0,
-          width: '30%', height: '22%',
+          bottom: 0, right: 0, width: '30%', height: '22%',
           background: 'radial-gradient(ellipse at 0% 0%, #2d7d2d 0%, transparent 70%)',
         }} />
-        {/* Cloud 1 */}
         <div style={{
           position: 'absolute',
-          top: '22%', left: '8%',
-          width: 140, height: 40,
+          top: '22%', left: '8%', width: 140, height: 40,
           background: 'radial-gradient(ellipse at 50% 60%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.2) 50%, transparent 75%)',
           filter: 'blur(4px)',
         }} />
-        {/* Cloud 2 */}
         <div style={{
           position: 'absolute',
-          top: '18%', right: '12%',
-          width: 180, height: 50,
+          top: '18%', right: '12%', width: 180, height: 50,
           background: 'radial-gradient(ellipse at 50% 60%, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 50%, transparent 75%)',
           filter: 'blur(5px)',
         }} />
-        {/* Cloud 3 */}
         <div style={{
           position: 'absolute',
-          top: '14%', left: '35%',
-          width: 120, height: 35,
+          top: '14%', left: '35%', width: 120, height: 35,
           background: 'radial-gradient(ellipse at 50% 60%, rgba(255,255,255,0.4) 0%, transparent 70%)',
           filter: 'blur(3px)',
         }} />
@@ -157,10 +148,7 @@ export default function Desktop() {
           zIndex: 1,
           flex: 1,
         }}
-        onContextMenu={(e) => {
-          // Right-click on empty desktop
-          e.preventDefault()
-        }}
+        onContextMenu={e => e.preventDefault()}
       >
         {pinnedIcons.map((appId) => {
           const iconData = ICONS.find(i => i.appId === appId)
@@ -186,62 +174,65 @@ export default function Desktop() {
       <div style={{
         position: 'relative',
         zIndex: 9997,
-        height: 48,
+        height: isMobile ? 56 : 48,
         background: 'rgba(32,32,32,0.92)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         borderTop: '1px solid rgba(255,255,255,0.08)',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: isMobile ? 'flex-start' : 'center',
         padding: '0 8px',
         flexShrink: 0,
+        gap: isMobile ? 2 : 0,
+        overflowX: isMobile ? 'auto' : 'visible',
       }}>
 
-        {/* Engineer toggle — far left */}
-        <div style={{ position: 'absolute', left: 12 }}>
-          <EngineerToggle />
+        {/* Engineer toggle — desktop only */}
+        {!isMobile && (
+          <div style={{ position: 'absolute', left: 12 }}>
+            <EngineerToggle />
+          </div>
+        )}
+
+        {/* Windows Start button */}
+        <div
+          onClick={() => setShowStart(s => !s)}
+          title="Start"
+          style={{
+            width: isMobile ? 44 : 40,
+            height: isMobile ? 44 : 40,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 4,
+            cursor: 'pointer',
+            flexShrink: 0,
+            background: showStart
+              ? 'rgba(255,255,255,0.15)'
+              : 'transparent',
+            transition: 'background 0.15s',
+          }}
+        >
+          <WindowsLogo />
         </div>
 
-        {/* Centered icons */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        {/* Separator */}
+        <div style={{
+          width: 1, height: 20,
+          background: 'rgba(255,255,255,0.15)',
+          margin: '0 4px',
+          flexShrink: 0,
+        }} />
 
-          {/* Windows Start button */}
-          <div
-            onClick={() => setShowStart(s => !s)}
-            title="Start"
-            style={{
-              width: 40, height: 40,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 4,
-              cursor: 'pointer',
-              background: showStart
-                ? 'rgba(255,255,255,0.15)'
-                : 'transparent',
-              transition: 'background 0.15s',
-            }}
-            onMouseEnter={e => {
-              if (!showStart)
-                e.currentTarget.style.background = 'rgba(255,255,255,0.1)'
-            }}
-            onMouseLeave={e => {
-              if (!showStart)
-                e.currentTarget.style.background = 'transparent'
-            }}
-          >
-            <WindowsLogo />
-          </div>
-
-          {/* Separator */}
-          <div style={{
-            width: 1, height: 20,
-            background: 'rgba(255,255,255,0.15)',
-            margin: '0 4px',
-          }} />
-
-          {/* App icons */}
+        {/* App icons */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          overflowX: isMobile ? 'auto' : 'visible',
+          flex: isMobile ? 1 : 'none',
+        }}>
           {ICONS.map(({ appId, icon, bg }) => {
             const win         = windows.find(w => w.appId === appId)
             const isOpen      = !!win
@@ -253,6 +244,7 @@ export default function Desktop() {
                 bg={bg}
                 isOpen={isOpen}
                 isMinimized={isMinimized}
+                isMobile={isMobile}
                 onClick={() => {
                   if (win) focusWindow(win.id)
                   else openWindow(appId)
@@ -264,22 +256,32 @@ export default function Desktop() {
 
         {/* System tray */}
         <div style={{
-          position: 'absolute', right: 0,
-          display: 'flex', alignItems: 'center',
+          display: 'flex',
+          alignItems: 'center',
+          marginLeft: isMobile ? 'auto' : undefined,
+          position: isMobile ? 'relative' : 'absolute',
+          right: isMobile ? undefined : 0,
+          flexShrink: 0,
         }}>
-          <TrayIcon>🔊</TrayIcon>
-          <TrayIcon>📶</TrayIcon>
-          <Clock />
+          {!isMobile && <TrayIcon>🔊</TrayIcon>}
+          {!isMobile && <TrayIcon>📶</TrayIcon>}
+          <Clock isMobile={isMobile} />
         </div>
       </div>
 
-      {/* Minimized app restore buttons */}
+      {/* Minimized restore buttons */}
       {minimized.length > 0 && (
         <div style={{
           position: 'absolute',
-          bottom: 52, left: '50%',
+          bottom: isMobile ? 60 : 52,
+          left: '50%',
           transform: 'translateX(-50%)',
-          display: 'flex', gap: 4, zIndex: 10,
+          display: 'flex',
+          gap: 4,
+          zIndex: 10,
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          maxWidth: '90vw',
         }}>
           {minimized.map(win => (
             <button
@@ -289,8 +291,10 @@ export default function Desktop() {
                 padding: '4px 12px',
                 background: 'rgba(255,255,255,0.12)',
                 border: '1px solid rgba(255,255,255,0.2)',
-                borderRadius: 4, color: 'white',
-                fontSize: 12, cursor: 'pointer',
+                borderRadius: 4,
+                color: 'white',
+                fontSize: 12,
+                cursor: 'pointer',
                 backdropFilter: 'blur(10px)',
               }}
             >
@@ -304,19 +308,22 @@ export default function Desktop() {
 }
 
 // ── Taskbar app icon ─────────────────────────────────────
-function TaskbarApp({ icon, bg, isOpen, isMinimized, onClick }) {
+function TaskbarApp({ icon, bg, isOpen, isMinimized, onClick, isMobile }) {
   const [hovered, setHovered] = useState(false)
+  const size     = isMobile ? 40 : 44
+  const iconSize = isMobile ? 24 : 28
+
   return (
     <div
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        width: 44, height: 44,
+        width: size, height: size,
         display: 'flex', alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 4, cursor: 'pointer',
-        position: 'relative',
+        position: 'relative', flexShrink: 0,
         background: hovered
           ? 'rgba(255,255,255,0.1)'
           : isOpen ? 'rgba(255,255,255,0.06)' : 'transparent',
@@ -324,10 +331,11 @@ function TaskbarApp({ icon, bg, isOpen, isMinimized, onClick }) {
       }}
     >
       <div style={{
-        width: 28, height: 28, borderRadius: 6,
-        background: bg,
+        width: iconSize, height: iconSize,
+        borderRadius: 6, background: bg,
         display: 'flex', alignItems: 'center',
-        justifyContent: 'center', fontSize: 16,
+        justifyContent: 'center',
+        fontSize: isMobile ? 14 : 16,
       }}>
         {icon}
       </div>
@@ -372,7 +380,7 @@ function TrayIcon({ children }) {
 }
 
 // ── Taskbar clock ────────────────────────────────────────
-function Clock() {
+function Clock({ isMobile }) {
   const [time,    setTime]    = useState(new Date())
   const [hovered, setHovered] = useState(false)
 
@@ -386,31 +394,43 @@ function Clock() {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        padding: '0 12px', height: 48,
-        display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center',
-        cursor: 'pointer', borderRadius: 4,
+        padding: '0 8px',
+        height: isMobile ? 56 : 48,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        borderRadius: 4,
         background: hovered
           ? 'rgba(255,255,255,0.1)' : 'transparent',
         transition: 'background 0.15s',
-        minWidth: 70,
+        minWidth: isMobile ? 50 : 70,
+        flexShrink: 0,
       }}
     >
-      <span style={{ color: 'white', fontSize: 12, lineHeight: 1.3 }}>
+      <span style={{
+        color: 'white',
+        fontSize: isMobile ? 11 : 12,
+        lineHeight: 1.3,
+        whiteSpace: 'nowrap',
+      }}>
         {time.toLocaleTimeString([], {
           hour: '2-digit', minute: '2-digit',
         })}
       </span>
-      <span style={{
-        color: 'rgba(255,255,255,0.75)',
-        fontSize: 11, lineHeight: 1.3,
-      }}>
-        {time.toLocaleDateString([], {
-          month: 'numeric',
-          day: 'numeric',
-          year: 'numeric',
-        })}
-      </span>
+      {!isMobile && (
+        <span style={{
+          color: 'rgba(255,255,255,0.75)',
+          fontSize: 11, lineHeight: 1.3,
+        }}>
+          {time.toLocaleDateString([], {
+            month: 'numeric',
+            day: 'numeric',
+            year: 'numeric',
+          })}
+        </span>
+      )}
     </div>
   )
 }

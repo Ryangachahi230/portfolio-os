@@ -3,35 +3,33 @@ import { persist } from 'zustand/middleware'
 import eventBus from '../events/eventBus'
 
 const APP_META = {
-  about:     { title: 'About Me',       icon: '👤', w: 560, h: 440 },
-  education: { title: 'Education',      icon: '🎓', w: 580, h: 500 },
-  skills:    { title: 'Skills',         icon: '⚙️', w: 660, h: 480 },
-  projects:  { title: 'Projects',       icon: '🗂️', w: 700, h: 500 },
-  terminal:  { title: 'Terminal',       icon: '💻', w: 560, h: 380 },
-  contact:   { title: 'Contact',        icon: '📬', w: 500, h: 400 },
-  monitor:   { title: 'System Monitor', icon: '📊', w: 500, h: 580 },
-  resume:    { title: 'Resume',         icon: '📄', w: 680, h: 580 },
-  clientwork:{ title: 'Client Work',    icon: '💼', w: 780, h: 560 },
-  game:      { title: 'Snake Game',     icon: '🎮', w: 480, h: 620 },
-  filemanager: { title: 'File Explorer', icon: '📁', w: 720, h: 520 },
+  about:      { title: 'About Me',       icon: '👤', w: 560, h: 440 },
+  education:  { title: 'Education',      icon: '🎓', w: 580, h: 500 },
+  skills:     { title: 'Skills',         icon: '⚙️', w: 660, h: 480 },
+  projects:   { title: 'Projects',       icon: '🗂️', w: 700, h: 500 },
+  terminal:   { title: 'Terminal',       icon: '💻', w: 560, h: 380 },
+  contact:    { title: 'Contact',        icon: '📬', w: 500, h: 400 },
+  monitor:    { title: 'System Monitor', icon: '📊', w: 500, h: 580 },
+  resume:     { title: 'Resume',         icon: '📄', w: 680, h: 580 },
+  clientwork: { title: 'Client Work',    icon: '💼', w: 780, h: 560 },
+  game:       { title: 'Snake Game',     icon: '🎮', w: 480, h: 620 },
+  filemanager:{ title: 'File Explorer',  icon: '📁', w: 720, h: 520 },
 }
 
-// ── Default icon positions (grid layout top-left) ────────
 const DEFAULT_ICON_POSITIONS = {
-  about:      { x: 20,  y: 20  },
-  education:  { x: 20,  y: 110 },
-  skills:     { x: 20,  y: 200 },
-  projects:   { x: 20,  y: 290 },
-  resume:     { x: 20,  y: 380 },
-  clientwork: { x: 20,  y: 470 },
-  terminal:   { x: 110, y: 20  },
-  contact:    { x: 110, y: 110 },
-  monitor:    { x: 110, y: 200 },
-  game:       { x: 110, y: 290 },
+  about:       { x: 20,  y: 20  },
+  education:   { x: 20,  y: 110 },
+  skills:      { x: 20,  y: 200 },
+  projects:    { x: 20,  y: 290 },
+  resume:      { x: 20,  y: 380 },
+  clientwork:  { x: 20,  y: 470 },
+  terminal:    { x: 110, y: 20  },
+  contact:     { x: 110, y: 110 },
+  monitor:     { x: 110, y: 200 },
+  game:        { x: 110, y: 290 },
   filemanager: { x: 110, y: 380 },
 }
 
-// ── All apps pinned to desktop by default ────────────────
 const DEFAULT_PINNED = Object.keys(DEFAULT_ICON_POSITIONS)
 
 const useStore = create(
@@ -39,8 +37,8 @@ const useStore = create(
     (set, get) => ({
 
       // ── Windows ──────────────────────────────────────
-      windows:       [],
-      nextZIndex:    10,
+      windows:        [],
+      nextZIndex:     10,
       activeWindowId: null,
 
       openWindow: (appId) => {
@@ -54,18 +52,25 @@ const useStore = create(
         const meta = APP_META[appId]
         if (!meta) return
 
+        // Mobile-aware sizing
+        const isMobile = window.innerWidth < 768
+        const maxW     = window.innerWidth  - 16
+        const maxH     = window.innerHeight - 80
+
+        const w = isMobile ? maxW : Math.min(meta.w, maxW)
+        const h = isMobile ? maxH : Math.min(meta.h, maxH)
+        const x = isMobile ? 8    : Math.max(8, (window.innerWidth  - w) / 2)
+        const y = isMobile ? 8    : Math.max(8, (window.innerHeight - h) / 4)
+
         set(s => ({
           windows: [...s.windows, {
             id, appId,
             title: meta.title,
-            x: 100 + s.windows.length * 30,
-            y: 80  + s.windows.length * 30,
-            w: meta.w,
-            h: meta.h,
+            x, y, w, h,
             minimized: false,
             zIndex: z,
           }],
-          nextZIndex:    z + 1,
+          nextZIndex:     z + 1,
           activeWindowId: id,
         }))
 
@@ -117,10 +122,7 @@ const useStore = create(
 
       setIconPosition: (appId, x, y) =>
         set(s => ({
-          iconPositions: {
-            ...s.iconPositions,
-            [appId]: { x, y },
-          }
+          iconPositions: { ...s.iconPositions, [appId]: { x, y } }
         })),
 
       resetIconPositions: () =>
@@ -141,8 +143,7 @@ const useStore = create(
           pinnedIcons: s.pinnedIcons.filter(id => id !== appId),
         })),
 
-      // ── Pinned apps in taskbar ────────────────────────
-      // (separate from desktop icons)
+      // ── Pinned taskbar ────────────────────────────────
       pinnedTaskbar: ['about', 'projects', 'terminal'],
 
       pinToTaskbar: (appId) =>
@@ -170,7 +171,6 @@ const useStore = create(
         set(s => ({ engineerMode: !s.engineerMode })),
 
     }),
-
     {
       name: 'portfolio-os-state',
       partialize: (s) => ({

@@ -15,7 +15,6 @@ const ALL_APPS = [
   { appId: 'filemanager', icon: '📁', label: 'File Explorer',bg: 'linear-gradient(145deg, #FFB900, #e6a800)' },
 ]
 
-// ── Pinned app icon ──────────────────────────────────────
 function PinnedApp({ app, onClick }) {
   return (
     <div
@@ -38,12 +37,10 @@ function PinnedApp({ app, onClick }) {
       }
     >
       <div style={{
-        width: 40,
-        height: 40,
+        width: 40, height: 40,
         borderRadius: 10,
         background: app.bg,
-        display: 'flex',
-        alignItems: 'center',
+        display: 'flex', alignItems: 'center',
         justifyContent: 'center',
         fontSize: 22,
         boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
@@ -63,7 +60,6 @@ function PinnedApp({ app, onClick }) {
   )
 }
 
-// ── Left sidebar item ────────────────────────────────────
 function SideItem({ icon, label, onClick, danger }) {
   return (
     <div
@@ -97,7 +93,6 @@ function SideItem({ icon, label, onClick, danger }) {
   )
 }
 
-// ── Search bar ───────────────────────────────────────────
 function SearchBar({ value, onChange }) {
   return (
     <div style={{
@@ -134,13 +129,12 @@ function SearchBar({ value, onChange }) {
   )
 }
 
-// ── Main Start Menu ──────────────────────────────────────
 export default function StartMenu({ onClose }) {
-  const { openWindow } = useStore()
-  const menuRef        = useRef()
+  const { openWindow }      = useStore()
+  const menuRef             = useRef()
   const [search, setSearch] = useState('')
+  const isMobile            = window.innerWidth < 768
 
-  // Close on outside click
   useEffect(() => {
     const handler = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -156,7 +150,6 @@ export default function StartMenu({ onClose }) {
     }
   }, [onClose])
 
-  // Close on Escape
   useEffect(() => {
     const handler = (e) => {
       if (e.key === 'Escape') onClose()
@@ -170,14 +163,12 @@ export default function StartMenu({ onClose }) {
     onClose()
   }
 
-  // Filter apps by search
   const filtered = search.trim()
     ? ALL_APPS.filter(a =>
         a.label.toLowerCase().includes(search.toLowerCase())
       )
     : ALL_APPS
 
-  // Shutdown — clear state and reload
   const handleShutdown = () => {
     localStorage.removeItem('portfolio-os-booted')
     localStorage.removeItem('portfolio-os-state')
@@ -189,10 +180,14 @@ export default function StartMenu({ onClose }) {
       ref={menuRef}
       style={{
         position: 'fixed',
-        bottom: 52,
+        bottom: isMobile ? 60 : 52,
         left: '50%',
         transform: 'translateX(-50%)',
-        width: 640,
+        // Responsive width
+        width: Math.min(640, window.innerWidth - 16),
+        maxHeight: isMobile
+          ? window.innerHeight - 80
+          : 560,
         background: 'rgba(18,18,30,0.96)',
         backdropFilter: 'blur(40px)',
         WebkitBackdropFilter: 'blur(40px)',
@@ -213,104 +208,117 @@ export default function StartMenu({ onClose }) {
         }
       `}</style>
 
-      {/* ── Search ──────────────────────────────────── */}
+      {/* Search */}
       <SearchBar value={search} onChange={setSearch} />
 
-      <div style={{ display: 'flex', flex: 1 }}>
+      <div style={{
+        display: 'flex',
+        flex: 1,
+        overflow: 'hidden',
+        // Stack vertically on mobile
+        flexDirection: isMobile ? 'column' : 'row',
+      }}>
 
-        {/* ── Left sidebar ────────────────────────────── */}
-        <div style={{
-          width: 220,
-          borderRight: '1px solid rgba(255,255,255,0.08)',
-          display: 'flex',
-          flexDirection: 'column',
-          padding: '8px 0',
-        }}>
-
-          {/* User profile */}
+        {/* Left sidebar — hidden on mobile when searching */}
+        {(!isMobile || !search.trim()) && (
           <div style={{
+            width: isMobile ? '100%' : 220,
+            borderRight: isMobile
+              ? 'none'
+              : '1px solid rgba(255,255,255,0.08)',
+            borderBottom: isMobile
+              ? '1px solid rgba(255,255,255,0.08)'
+              : 'none',
             display: 'flex',
-            alignItems: 'center',
-            gap: 12,
-            padding: '8px 16px 16px',
-            borderBottom: '1px solid rgba(255,255,255,0.08)',
-            marginBottom: 8,
+            flexDirection: isMobile ? 'row' : 'column',
+            padding: isMobile ? '4px 8px' : '8px 0',
+            flexWrap: isMobile ? 'wrap' : 'nowrap',
+            flexShrink: 0,
+            overflowX: isMobile ? 'auto' : 'visible',
           }}>
-            <div style={{
-              width: 42, height: 42,
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #0078D4, #005a9e)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 22, flexShrink: 0,
-              boxShadow: '0 2px 8px rgba(0,120,212,0.4)',
-            }}>
-              👤
-            </div>
-            <div>
+
+            {/* User profile — desktop only */}
+            {!isMobile && (
               <div style={{
-                fontSize: 13, fontWeight: 600, color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                padding: '8px 16px 16px',
+                borderBottom: '1px solid rgba(255,255,255,0.08)',
+                marginBottom: 8,
               }}>
-                Ryan Gachahi
+                <div style={{
+                  width: 42, height: 42,
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #0078D4, #005a9e)',
+                  display: 'flex', alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 22, flexShrink: 0,
+                  boxShadow: '0 2px 8px rgba(0,120,212,0.4)',
+                }}>
+                  👤
+                </div>
+                <div>
+                  <div style={{
+                    fontSize: 13, fontWeight: 600, color: 'white',
+                  }}>
+                    Ryan Gachahi
+                  </div>
+                  <div style={{
+                    fontSize: 11,
+                    color: 'rgba(255,255,255,0.45)',
+                    marginTop: 1,
+                  }}>
+                    Full Stack Developer
+                  </div>
+                </div>
               </div>
+            )}
+
+            {/* Quick links */}
+            <SideItem icon="👤" label="About Me"
+              onClick={() => handleOpen('about')} />
+            <SideItem icon="🗂️" label="Projects"
+              onClick={() => handleOpen('projects')} />
+            <SideItem icon="📄" label="Resume"
+              onClick={() => handleOpen('resume')} />
+            <SideItem icon="💼" label="Client Work"
+              onClick={() => handleOpen('clientwork')} />
+            <SideItem icon="🎮" label="Snake Game"
+              onClick={() => handleOpen('game')} />
+            <SideItem icon="📬" label="Contact"
+              onClick={() => handleOpen('contact')} />
+            <SideItem icon="📁" label="File Explorer"
+              onClick={() => handleOpen('filemanager')} />
+
+            {/* Spacer — desktop only */}
+            {!isMobile && <div style={{ flex: 1 }} />}
+
+            {/* Bottom actions — desktop only */}
+            {!isMobile && (
               <div style={{
-                fontSize: 11,
-                color: 'rgba(255,255,255,0.45)',
-                marginTop: 1,
+                borderTop: '1px solid rgba(255,255,255,0.08)',
+                paddingTop: 8, marginTop: 8,
               }}>
-                Full Stack Developer
+                <SideItem icon="⚙️" label="Settings"
+                  onClick={() => handleOpen('monitor')} />
+                <SideItem
+                  icon="⏻" label="Shut down"
+                  danger onClick={handleShutdown}
+                />
               </div>
-            </div>
+            )}
           </div>
+        )}
 
-          {/* ── Quick links ─────────────────────────── */}
-          <SideItem icon="👤" label="About Me"
-            onClick={() => handleOpen('about')} />
-          <SideItem icon="🗂️" label="Projects"
-            onClick={() => handleOpen('projects')} />
-          <SideItem icon="📄" label="Resume"
-            onClick={() => handleOpen('resume')} />
-          <SideItem icon="💼" label="Client Work"
-            onClick={() => handleOpen('clientwork')} />
-          <SideItem icon="🎮" label="Snake Game"
-            onClick={() => handleOpen('game')} />
-          <SideItem icon="📬" label="Contact"
-            onClick={() => handleOpen('contact')} />
-
-          {/* ── NEW: File Explorer link ──────────────── */}
-          <SideItem icon="📁" label="File Explorer"
-            onClick={() => handleOpen('filemanager')} />
-
-          {/* Spacer */}
-          <div style={{ flex: 1 }} />
-
-          {/* ── Bottom actions ───────────────────────── */}
-          <div style={{
-            borderTop: '1px solid rgba(255,255,255,0.08)',
-            paddingTop: 8,
-            marginTop: 8,
-          }}>
-            <SideItem icon="⚙️" label="Settings"
-              onClick={() => handleOpen('monitor')} />
-            <SideItem
-              icon="⏻"
-              label="Shut down"
-              danger
-              onClick={handleShutdown}
-            />
-          </div>
-        </div>
-
-        {/* ── Right — pinned apps grid ─────────────────── */}
+        {/* Right — pinned apps grid */}
         <div style={{
           flex: 1,
           padding: '12px 8px',
           overflowY: 'auto',
         }}>
           <p style={{
-            fontSize: 11,
-            fontWeight: 600,
+            fontSize: 11, fontWeight: 600,
             color: 'rgba(255,255,255,0.35)',
             letterSpacing: 0.8,
             padding: '0 8px 8px',
@@ -321,17 +329,17 @@ export default function StartMenu({ onClose }) {
 
           {filtered.length === 0 ? (
             <div style={{
-              padding: 24,
-              textAlign: 'center',
-              color: 'rgba(255,255,255,0.3)',
-              fontSize: 13,
+              padding: 24, textAlign: 'center',
+              color: 'rgba(255,255,255,0.3)', fontSize: 13,
             }}>
               No apps found
             </div>
           ) : (
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
+              gridTemplateColumns: isMobile
+                ? 'repeat(3, 1fr)'
+                : 'repeat(4, 1fr)',
               gap: 4,
             }}>
               {filtered.map(app => (
@@ -341,6 +349,44 @@ export default function StartMenu({ onClose }) {
                   onClick={handleOpen}
                 />
               ))}
+            </div>
+          )}
+
+          {/* Mobile shutdown button */}
+          {isMobile && (
+            <div style={{
+              marginTop: 12,
+              borderTop: '1px solid rgba(255,255,255,0.08)',
+              paddingTop: 12,
+              display: 'flex',
+              gap: 8,
+              justifyContent: 'center',
+            }}>
+              <button
+                onClick={() => handleOpen('monitor')}
+                style={{
+                  padding: '8px 16px',
+                  background: 'rgba(255,255,255,0.08)',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  borderRadius: 6, color: 'white',
+                  fontSize: 12, cursor: 'pointer',
+                }}
+              >
+                ⚙️ Settings
+              </button>
+              <button
+                onClick={handleShutdown}
+                style={{
+                  padding: '8px 16px',
+                  background: 'rgba(255,80,80,0.15)',
+                  border: '1px solid rgba(255,80,80,0.3)',
+                  borderRadius: 6,
+                  color: 'rgba(255,100,100,0.9)',
+                  fontSize: 12, cursor: 'pointer',
+                }}
+              >
+                ⏻ Shut down
+              </button>
             </div>
           )}
         </div>

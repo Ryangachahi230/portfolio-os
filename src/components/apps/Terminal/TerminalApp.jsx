@@ -9,26 +9,27 @@ const COMMANDS = {
   help: () => ({
     type: 'table',
     rows: [
-      { cmd: 'help',     desc: 'Show available commands'         },
-      { cmd: 'about',    desc: 'Display personal information'    },
-      { cmd: 'skills',   desc: 'List all technical skills'       },
-      { cmd: 'projects', desc: 'Show all projects'               },
-      { cmd: 'open',     desc: 'Open an app  (e.g. open skills)' },
-      { cmd: 'whoami',   desc: 'Quick introduction'              },
-      { cmd: 'date',     desc: 'Show current date and time'      },
-      { cmd: 'clear',    desc: 'Clear the terminal'              },
-      { cmd: 'exit',     desc: 'Close the terminal window'       },
+      { cmd: 'help',        desc: 'Show available commands'            },
+      { cmd: 'about',       desc: 'Display personal information'       },
+      { cmd: 'skills',      desc: 'List all technical skills'          },
+      { cmd: 'projects',    desc: 'Show all projects'                  },
+      { cmd: 'open <app>',  desc: 'Open an app (e.g. open projects)'   },
+      { cmd: 'ls',          desc: 'List all available apps'            },
+      { cmd: 'whoami',      desc: 'Quick introduction'                 },
+      { cmd: 'date',        desc: 'Show current date and time'         },
+      { cmd: 'clear',       desc: 'Clear the terminal'                 },
+      { cmd: 'exit',        desc: 'Close the terminal window'          },
     ],
   }),
 
   about: () => ({
     type: 'info',
     rows: [
-      { key: 'Name',     value: about.name     },
-      { key: 'Role',     value: about.role     },
-      { key: 'Location', value: about.location },
-      { key: 'GitHub',   value: about.contact.github },
-      { key: 'Email',    value: about.contact.email  },
+      { key: 'Name',     value: about.name            },
+      { key: 'Role',     value: about.role            },
+      { key: 'Location', value: about.location        },
+      { key: 'GitHub',   value: about.contact.github  },
+      { key: 'Email',    value: about.contact.email   },
     ],
   }),
 
@@ -50,18 +51,51 @@ const COMMANDS = {
   date: () => ({
     type: 'text',
     text: new Date().toLocaleString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
+      weekday:  'long',
+      year:     'numeric',
+      month:    'long',
+      day:      'numeric',
+      hour:     '2-digit',
+      minute:   '2-digit',
+      second:   '2-digit',
     }),
+  }),
+
+  // ls — list all apps
+  ls: () => ({
+    type: 'ls',
+    apps: [
+      { appId: 'about',       label: 'About Me'     },
+      { appId: 'education',   label: 'Education'    },
+      { appId: 'skills',      label: 'Skills'       },
+      { appId: 'projects',    label: 'Projects'     },
+      { appId: 'resume',      label: 'Resume'       },
+      { appId: 'clientwork',  label: 'Client Work'  },
+      { appId: 'terminal',    label: 'Terminal'     },
+      { appId: 'contact',     label: 'Contact'      },
+      { appId: 'monitor',     label: 'Monitor'      },
+      { appId: 'game',        label: 'Snake Game'   },
+      { appId: 'filemanager', label: 'File Explorer'},
+    ],
   }),
 
   clear: () => ({ type: 'clear' }),
 }
+
+// ── All valid app IDs for open command ───────────────────
+const VALID_APPS = [
+  'about',
+  'education',
+  'skills',
+  'projects',
+  'resume',
+  'clientwork',
+  'terminal',
+  'contact',
+  'monitor',
+  'game',
+  'filemanager',
+]
 
 // ── Render output based on type ──────────────────────────
 function Output({ result }) {
@@ -74,12 +108,11 @@ function Output({ result }) {
         {result.rows.map((r, i) => (
           <div key={i} style={{
             display: 'flex',
-            gap: 0,
             lineHeight: 1.8,
           }}>
             <span style={{
               color: '#3fb950',
-              minWidth: 120,
+              minWidth: 140,
               fontWeight: 600,
             }}>
               {r.cmd}
@@ -91,20 +124,16 @@ function Output({ result }) {
     )
   }
 
-  // About info table
+  // About info
   if (result.type === 'info') {
     return (
       <div style={{ marginTop: 4 }}>
         {result.rows.map((r, i) => (
           <div key={i} style={{
             display: 'flex',
-            gap: 0,
             lineHeight: 1.8,
           }}>
-            <span style={{
-              color: '#79c0ff',
-              minWidth: 100,
-            }}>
+            <span style={{ color: '#79c0ff', minWidth: 100 }}>
               {r.key}
             </span>
             <span style={{ color: '#e3e3e3' }}>: {r.value}</span>
@@ -114,7 +143,7 @@ function Output({ result }) {
     )
   }
 
-  // Skills output
+  // Skills
   if (result.type === 'skills') {
     return (
       <div style={{ marginTop: 4 }}>
@@ -149,7 +178,7 @@ function Output({ result }) {
     )
   }
 
-  // Projects output
+  // Projects
   if (result.type === 'projects') {
     return (
       <div style={{ marginTop: 4 }}>
@@ -165,7 +194,9 @@ function Output({ result }) {
             <div style={{ color: '#8b949e', fontSize: 12 }}>
               {p.tagline}
             </div>
-            <div style={{ color: '#3fb950', fontSize: 11, marginTop: 2 }}>
+            <div style={{
+              color: '#3fb950', fontSize: 11, marginTop: 2,
+            }}>
               {p.tech.join(' · ')}
             </div>
           </div>
@@ -174,10 +205,52 @@ function Output({ result }) {
     )
   }
 
+  // ls — app directory listing
+  if (result.type === 'ls') {
+    return (
+      <div style={{ marginTop: 4 }}>
+        <div style={{
+          color: '#8b949e', fontSize: 11,
+          marginBottom: 6,
+        }}>
+          Directory: C:\Portfolio\Apps
+        </div>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '2px 16px',
+        }}>
+          {result.apps.map((app, i) => (
+            <div key={i} style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              lineHeight: 1.8,
+            }}>
+              <span style={{ color: '#58a6ff', minWidth: 100 }}>
+                {app.appId}
+              </span>
+              <span style={{ color: '#8b949e', fontSize: 11 }}>
+                {app.label}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div style={{
+          color: '#555', fontSize: 11, marginTop: 8,
+        }}>
+          Use 'open &lt;appId&gt;' to launch any app
+        </div>
+      </div>
+    )
+  }
+
   // Plain text
   if (result.type === 'text') {
     return (
-      <div style={{ color: '#e3e3e3', marginTop: 4, lineHeight: 1.8 }}>
+      <div style={{
+        color: '#e3e3e3', marginTop: 4, lineHeight: 1.8,
+      }}>
         {result.text}
       </div>
     )
@@ -188,39 +261,29 @@ function Output({ result }) {
 
 // ── Single terminal line ─────────────────────────────────
 function Line({ line }) {
-  // Input line (what user typed)
   if (line.type === 'input') {
     return (
       <div style={{
         display: 'flex',
-        gap: 0,
         lineHeight: 1.8,
         flexWrap: 'wrap',
+        marginTop: 4,
       }}>
-        <span style={{ color: '#3fb950', marginRight: 4 }}>
-          PS
-        </span>
+        <span style={{ color: '#3fb950', marginRight: 4 }}>PS</span>
         <span style={{ color: '#79c0ff', marginRight: 4 }}>
           C:\Portfolio
         </span>
-        <span style={{ color: '#e3e3e3', marginRight: 8 }}>
-          {'>'}
-        </span>
-        <span style={{ color: '#e3e3e3' }}>
-          {line.text}
-        </span>
+        <span style={{ color: '#e3e3e3', marginRight: 8 }}>{'>'}</span>
+        <span style={{ color: '#e3e3e3' }}>{line.text}</span>
       </div>
     )
   }
 
-  // Error line
   if (line.type === 'error') {
     return (
       <div style={{
-        color: '#ff5f57',
-        lineHeight: 1.8,
-        display: 'flex',
-        gap: 8,
+        color: '#ff5f57', lineHeight: 1.8,
+        display: 'flex', gap: 8,
       }}>
         <span>✖</span>
         <span>{line.text}</span>
@@ -228,7 +291,18 @@ function Line({ line }) {
     )
   }
 
-  // System/welcome line
+  if (line.type === 'success') {
+    return (
+      <div style={{
+        color: '#3fb950', lineHeight: 1.8,
+        display: 'flex', gap: 8,
+      }}>
+        <span>✔</span>
+        <span>{line.text}</span>
+      </div>
+    )
+  }
+
   if (line.type === 'system') {
     return (
       <div style={{ color: '#f0b429', lineHeight: 1.8 }}>
@@ -237,15 +311,13 @@ function Line({ line }) {
     )
   }
 
-  // Output with rich result
   if (line.type === 'output' && line.result) {
     return <Output result={line.result} />
   }
 
-  // Plain output text
   return (
     <div style={{ color: '#8b949e', lineHeight: 1.8 }}>
-      {line.text}
+      {line.text ?? ''}
     </div>
   )
 }
@@ -257,12 +329,12 @@ export default function TerminalApp() {
   const windows     = useStore(s => s.windows)
 
   const [lines, setLines] = useState([
-    { type: 'system', text: 'Windows PowerShell' },
-    { type: 'system', text: 'Portfolio OS [Version 1.0.0]' },
-    { type: 'system', text: '(c) Ryan Gachahi. All rights reserved.' },
-    { type: 'output', text: '' },
-    { type: 'output', text: "Type 'help' to see available commands." },
-    { type: 'output', text: '' },
+    { type: 'system', text: 'Windows PowerShell'                        },
+    { type: 'system', text: 'Portfolio OS [Version 1.0.0]'              },
+    { type: 'system', text: '(c) Ryan Gachahi. All rights reserved.'    },
+    { type: 'output', text: ''                                           },
+    { type: 'output', text: "Type 'help' for commands · 'ls' to list all apps" },
+    { type: 'output', text: ''                                           },
   ])
 
   const [input,   setInput]   = useState('')
@@ -272,7 +344,7 @@ export default function TerminalApp() {
   const bottomRef = useRef()
   const inputRef  = useRef()
 
-  // Auto scroll
+  // Auto scroll to bottom
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [lines])
@@ -281,54 +353,66 @@ export default function TerminalApp() {
     const raw = input.trim()
     if (!raw) return
 
-    // Save history
+    // Save to history
     setHistory(h => [raw, ...h].slice(0, 50))
     setHistIdx(-1)
 
     const newLines = [{ type: 'input', text: raw }]
+    const lower    = raw.toLowerCase()
 
-    // Handle open <appId>
-    if (raw.toLowerCase().startsWith('open ')) {
+    // ── open <appId> ──────────────────────────────────
+    if (lower.startsWith('open ')) {
       const appId = raw.split(' ')[1]?.toLowerCase()
-      const valid = ['about','education','skills','projects','contact','monitor']
-      if (valid.includes(appId)) {
+
+      if (!appId) {
+        newLines.push({
+          type: 'error',
+          text: 'Usage: open <appId>  (type ls to see all apps)',
+        })
+      } else if (VALID_APPS.includes(appId)) {
         openWindow(appId)
         newLines.push({
-          type: 'output',
-          text: `Opening ${appId}...`,
+          type: 'success',
+          text: `Launching ${appId}...`,
         })
       } else {
         newLines.push({
           type: 'error',
-          text: `Unknown app: "${appId}". Valid: ${valid.join(', ')}`,
+          text: `Unknown app: "${appId}". Type 'ls' to see all apps.`,
         })
       }
+
       setLines(p => [...p, ...newLines])
       setInput('')
       return
     }
 
-    // Handle exit
-    if (raw.toLowerCase() === 'exit') {
+    // ── exit ──────────────────────────────────────────
+    if (lower === 'exit') {
       const win = windows.find(w => w.appId === 'terminal')
       if (win) closeWindow(win.id)
       return
     }
 
-    // Run command
-    const cmd = COMMANDS[raw.toLowerCase()]
+    // ── run named command ─────────────────────────────
+    const cmd = COMMANDS[lower]
     if (!cmd) {
       newLines.push({
         type: 'error',
-        text: `'${raw}' is not recognized as a command. Type 'help'.`,
+        text: `'${raw}' is not recognized. Type 'help' for commands.`,
       })
     } else {
       const result = cmd()
+
       if (result.type === 'clear') {
-        setLines([{ type: 'system', text: 'Terminal cleared.' }])
+        setLines([
+          { type: 'system', text: 'Terminal cleared.' },
+          { type: 'output', text: '' },
+        ])
         setInput('')
         return
       }
+
       newLines.push({ type: 'output', result })
       newLines.push({ type: 'output', text: '' })
     }
@@ -347,6 +431,7 @@ export default function TerminalApp() {
       setHistIdx(idx)
       setInput(history[idx] ?? '')
     }
+
     if (e.key === 'ArrowDown') {
       e.preventDefault()
       const idx = Math.max(histIdx - 1, -1)
@@ -367,7 +452,7 @@ export default function TerminalApp() {
       }}
       onClick={() => inputRef.current?.focus()}
     >
-      {/* ── Tab bar (Windows Terminal style) ────────────── */}
+      {/* ── Windows Terminal tab bar ─────────────────── */}
       <div style={{
         height: 32,
         background: '#010409',
@@ -390,17 +475,12 @@ export default function TerminalApp() {
           marginBottom: -1,
         }}>
           <span style={{ fontSize: 12 }}>💻</span>
-          <span style={{
-            fontSize: 12,
-            color: '#e3e3e3',
-          }}>
+          <span style={{ fontSize: 12, color: '#e3e3e3' }}>
             PowerShell
           </span>
           <span style={{
-            fontSize: 10,
-            color: '#555',
-            marginLeft: 4,
-            cursor: 'pointer',
+            fontSize: 10, color: '#555',
+            marginLeft: 4, cursor: 'pointer',
           }}>
             ✕
           </span>
@@ -408,8 +488,7 @@ export default function TerminalApp() {
 
         {/* New tab button */}
         <div style={{
-          width: 28,
-          height: 28,
+          width: 28, height: 28,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -423,7 +502,7 @@ export default function TerminalApp() {
         </div>
       </div>
 
-      {/* ── Output area ─────────────────────────────────── */}
+      {/* ── Output area ──────────────────────────────── */}
       <div style={{
         flex: 1,
         overflowY: 'auto',
@@ -433,15 +512,16 @@ export default function TerminalApp() {
           <Line key={i} line={line} />
         ))}
 
-        {/* Live input line */}
+        {/* Live input prompt */}
         <div style={{
           display: 'flex',
-          gap: 0,
           alignItems: 'center',
           marginTop: 4,
         }}>
           <span style={{ color: '#3fb950', marginRight: 4 }}>PS</span>
-          <span style={{ color: '#79c0ff', marginRight: 4 }}>C:\Portfolio</span>
+          <span style={{ color: '#79c0ff', marginRight: 4 }}>
+            C:\Portfolio
+          </span>
           <span style={{ color: '#e3e3e3', marginRight: 8 }}>{'>'}</span>
           <input
             ref={inputRef}

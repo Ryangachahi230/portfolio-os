@@ -35,11 +35,11 @@ export default function Desktop() {
     pinnedIcons, resetIconPositions,
   } = useStore()
 
-  const minimized   = windows.filter(w => w.minimized)
+  const minimized              = windows.filter(w => w.minimized)
   const [showStart, setShowStart] = useState(false)
   const [isMobile,  setIsMobile]  = useState(window.innerWidth < 768)
 
-  // Listen for resize
+  // Listen for screen resize
   useEffect(() => {
     const handler = () => setIsMobile(window.innerWidth < 768)
     window.addEventListener('resize', handler)
@@ -49,7 +49,7 @@ export default function Desktop() {
   return (
     <div style={{
       width: '100%',
-      height: '100vh',
+      height: '100dvh',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
@@ -63,6 +63,7 @@ export default function Desktop() {
         inset: 0, zIndex: 0,
         overflow: 'hidden',
       }}>
+        {/* Sky */}
         <div style={{
           position: 'absolute', inset: 0,
           background: `linear-gradient(180deg,
@@ -70,6 +71,7 @@ export default function Desktop() {
             #2d6abf 50%, #5b9bd4 65%, #87ceeb 78%,
             #b8e0f0 88%, #d4eef8 100%)`,
         }} />
+        {/* Sun glow */}
         <div style={{
           position: 'absolute',
           top: '18%', left: '50%',
@@ -77,11 +79,13 @@ export default function Desktop() {
           width: '60%', height: '50%',
           background: 'radial-gradient(ellipse at 50% 20%, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.08) 35%, transparent 65%)',
         }} />
+        {/* Horizon haze */}
         <div style={{
           position: 'absolute',
           bottom: '28%', left: 0, right: 0, height: '22%',
           background: 'radial-gradient(ellipse at 50% 100%, rgba(200,230,255,0.5) 0%, rgba(150,200,240,0.2) 50%, transparent 75%)',
         }} />
+        {/* Green orb bloom */}
         <div style={{
           position: 'absolute',
           bottom: '20%', left: '50%',
@@ -89,6 +93,7 @@ export default function Desktop() {
           width: '55%', height: '45%',
           background: 'radial-gradient(ellipse at 50% 80%, rgba(80,180,80,0.55) 0%, rgba(40,140,40,0.25) 40%, transparent 70%)',
         }} />
+        {/* Orb highlight */}
         <div style={{
           position: 'absolute',
           bottom: '26%', left: '50%',
@@ -96,6 +101,7 @@ export default function Desktop() {
           width: '22%', height: '22%',
           background: 'radial-gradient(ellipse at 50% 60%, rgba(200,255,200,0.7) 0%, rgba(120,220,120,0.3) 50%, transparent 75%)',
         }} />
+        {/* Grass base */}
         <div style={{
           position: 'absolute',
           bottom: 0, left: 0, right: 0, height: '32%',
@@ -104,6 +110,7 @@ export default function Desktop() {
             #1f5e1f 80%, #164416 100%)`,
           borderRadius: '50% 50% 0 0 / 8% 8% 0 0',
         }} />
+        {/* Grass highlight */}
         <div style={{
           position: 'absolute',
           bottom: '28%', left: '50%',
@@ -111,28 +118,33 @@ export default function Desktop() {
           width: '70%', height: '10%',
           background: 'radial-gradient(ellipse at 50% 0%, rgba(120,220,80,0.5) 0%, transparent 70%)',
         }} />
+        {/* Left grass roll */}
         <div style={{
           position: 'absolute',
           bottom: 0, left: 0, width: '30%', height: '22%',
           background: 'radial-gradient(ellipse at 100% 0%, #2d7d2d 0%, transparent 70%)',
         }} />
+        {/* Right grass roll */}
         <div style={{
           position: 'absolute',
           bottom: 0, right: 0, width: '30%', height: '22%',
           background: 'radial-gradient(ellipse at 0% 0%, #2d7d2d 0%, transparent 70%)',
         }} />
+        {/* Cloud 1 */}
         <div style={{
           position: 'absolute',
           top: '22%', left: '8%', width: 140, height: 40,
           background: 'radial-gradient(ellipse at 50% 60%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.2) 50%, transparent 75%)',
           filter: 'blur(4px)',
         }} />
+        {/* Cloud 2 */}
         <div style={{
           position: 'absolute',
           top: '18%', right: '12%', width: 180, height: 50,
           background: 'radial-gradient(ellipse at 50% 60%, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 50%, transparent 75%)',
           filter: 'blur(5px)',
         }} />
+        {/* Cloud 3 */}
         <div style={{
           position: 'absolute',
           top: '14%', left: '35%', width: 120, height: 35,
@@ -225,7 +237,7 @@ export default function Desktop() {
           flexShrink: 0,
         }} />
 
-        {/* App icons */}
+        {/* App icons — scrollable on mobile */}
         <div style={{
           display: 'flex',
           alignItems: 'center',

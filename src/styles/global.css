@@ -6,12 +6,19 @@
 }
 
 /* ── Base ─────────────────────────────────────────────── */
-body {
+html, body {
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   background: #000;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
   user-select: none;
+  height: -webkit-fill-available;
+}
+
+#root {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 /* ── Windows 11 scrollbar ─────────────────────────────── */
@@ -49,7 +56,7 @@ a {
   -webkit-backdrop-filter: blur(20px);
 }
 
-/* ── Focus ring (accessibility) ───────────────────────── */
+/* ── Focus ring ───────────────────────────────────────── */
 :focus-visible {
   outline: 2px solid #0078D4;
   outline-offset: 2px;
@@ -59,4 +66,14 @@ a {
 ::selection {
   background: #0078D4;
   color: white;
+}
+
+/* ── Mobile fixes ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
 }

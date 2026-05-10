@@ -24,6 +24,7 @@ export default function ResumeApp() {
         gap: 8,
         flexShrink: 0,
       }}>
+
         {/* Icon + label */}
         <div style={{
           width: 22, height: 22,
@@ -33,63 +34,38 @@ export default function ResumeApp() {
           alignItems: 'center',
           justifyContent: 'center',
           fontSize: 12,
+          flexShrink: 0,
         }}>
           📄
         </div>
-        <span style={{ fontSize: 12, color: '#555', fontWeight: 500 }}>
+
+        <span style={{
+          fontSize: 12,
+          color: '#555',
+          fontWeight: 500,
+        }}>
           Ryan Gachahi — Resume.pdf
         </span>
 
         {/* Spacer */}
         <div style={{ flex: 1 }} />
 
-        {/* Download button */}
-        <a
-          href="/resume.pdf"
-          download="Ryan_Gachahi_Resume.pdf"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            padding: '5px 14px',
-            background: '#0078D4',
-            color: 'white',
-            borderRadius: 4,
-            fontSize: 12,
-            fontWeight: 500,
-            textDecoration: 'none',
-            transition: 'background 0.15s',
-          }}
-          onMouseEnter={e => e.currentTarget.style.background = '#006cc1'}
-          onMouseLeave={e => e.currentTarget.style.background = '#0078D4'}
-        >
-          ⬇ Download
-        </a>
-
-        {/* Open in new tab */}
-        <a
-          href="/resume.pdf"
-          target="_blank"
-          rel="noreferrer"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            padding: '5px 14px',
-            background: 'white',
-            color: '#333',
-            border: '1px solid rgba(0,0,0,0.15)',
-            borderRadius: 4,
-            fontSize: 12,
-            fontWeight: 500,
-            textDecoration: 'none',
-            transition: 'background 0.15s',
-          }}
-          onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'}
-          onMouseLeave={e => e.currentTarget.style.background = 'white'}
-        >
-          ↗ Full Screen
-        </a>
+        {/* View only badge */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          padding: '4px 12px',
+          background: '#fff8e8',
+          border: '1px solid #f0d080',
+          borderRadius: 4,
+          fontSize: 11,
+          color: '#8a6200',
+          fontWeight: 500,
+        }}>
+          <span>👁️</span>
+          <span>View Only</span>
+        </div>
       </div>
 
       {/* ── PDF Viewer ────────────────────────────────── */}
@@ -137,37 +113,43 @@ export default function ResumeApp() {
             gap: 12,
           }}>
             <span style={{ fontSize: 48 }}>📄</span>
-            <p style={{ fontSize: 14, color: '#555', fontWeight: 500 }}>
+            <p style={{
+              fontSize: 14, color: '#555', fontWeight: 500,
+            }}>
               Resume not found
             </p>
-            <p style={{ fontSize: 12, color: '#999', textAlign: 'center', maxWidth: 280 }}>
-              Add your PDF to the <code style={{ background: '#f0f0f0', padding: '1px 6px', borderRadius: 3 }}>public/</code> folder
-              and name it <code style={{ background: '#f0f0f0', padding: '1px 6px', borderRadius: 3 }}>resume.pdf</code>
+            <p style={{
+              fontSize: 12, color: '#999',
+              textAlign: 'center', maxWidth: 280,
+            }}>
+              Add your PDF to the{' '}
+              <code style={{
+                background: '#f0f0f0',
+                padding: '1px 6px',
+                borderRadius: 3,
+              }}>
+                public/
+              </code>{' '}
+              folder and name it{' '}
+              <code style={{
+                background: '#f0f0f0',
+                padding: '1px 6px',
+                borderRadius: 3,
+              }}>
+                resume.pdf
+              </code>
             </p>
-            
-              <a
-                href="/resume.pdf"
-                download
-                style={{
-                marginTop: 8,
-                padding: '8px 20px',
-                background: '#0078D4',
-                color: 'white',
-                borderRadius: 4,
-                fontSize: 13,
-                textDecoration: 'none',
-              }}
-            >
-              Try Download Anyway
-            </a>
           </div>
         )}
 
-        {/* PDF iframe */}
+        {/* ── PDF iframe ──────────────────────────────── */}
+        {/* toolbar=0 hides the browser PDF toolbar        */}
+        {/* navpanes=0 hides the navigation panel          */}
+        {/* This removes the built-in download button      */}
         {!error && (
           <iframe
-            src="/resume.pdf#toolbar=0&navpanes=0&scrollbar=1"
-            title="Resume"
+            src="/resume.pdf#toolbar=0&navpanes=0&scrollbar=1&view=FitH"
+            title="Resume — View Only"
             width="100%"
             height="100%"
             style={{
@@ -180,6 +162,23 @@ export default function ResumeApp() {
             onError={() => {
               setLoading(false)
               setError(true)
+            }}
+          />
+        )}
+
+        {/* ── Invisible overlay blocks right-click ──────── */}
+        {/* Prevents save/download via right-click on PDF   */}
+        {!error && !loading && (
+          <div
+            onContextMenu={e => e.preventDefault()}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 2,
+              background: 'transparent',
+              cursor: 'default',
+              // Let scroll and pointer events pass through
+              pointerEvents: 'none',
             }}
           />
         )}
